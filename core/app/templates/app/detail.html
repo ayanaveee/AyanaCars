@@ -97,11 +97,6 @@
                 <li><strong>Местоположение:</strong> {{ car.location }}</li>
                 <li><strong>Учёт:</strong> {{ car.registration }}</li>
             </ul>
-            {% if car.is_available %}
-                <span class="badge bg-success badge-available">В наличии</span>
-            {% else %}
-                <span class="badge bg-danger badge-available">Продано</span>
-            {% endif %}
         </div>
     </div>
 </div>
