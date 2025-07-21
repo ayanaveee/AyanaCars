@@ -1,0 +1,156 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение данных</title>
+    <style>
+        body {
+            background-image: url("{% static 'wall.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-container {
+            max-width: 700px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .btn {
+            padding: 0.6rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        small {
+            display: block;
+            margin-top: 0.5rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container form-container">
+    <h2 class="text-center mb-4">Редактирование данных о машине</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Название автомобиля:</label>
+            <input type="text" name="title" id="title" class="form-control" value="{{ car.title }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="model" class="form-label">Модель:</label>
+            <input type="text" name="model" id="model" class="form-control" value="{{ car.model }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="category" class="form-label">Категория:</label>
+            <select name="category" id="category" class="form-select" required>
+                <option value="">-- Выберите --</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if car.category.id == category.id %}selected{% endif %}>
+                        {{ category.title }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="engine_volume" class="form-label">Объем двигателя:</label>
+            <input type="text" name="engine_volume" id="engine_volume" class="form-control" value="{{ car.engine_volume }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="color" class="form-label">Цвет:</label>
+            <input type="text" name="color" id="color" class="form-control" value="{{ car.color }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="transmission" class="form-label">Коробка передач:</label>
+            <select name="transmission" id="transmission" class="form-select" required>
+                <option value="">-- Выберите --</option>
+                <option value="Автомат" {% if car.transmission == "Автомат" %}selected{% endif %}>Автомат</option>
+                <option value="Механика" {% if car.transmission == "Механика" %}selected{% endif %}>Механика</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Цена:</label>
+            <input type="number" step="any" name="price" id="price" class="form-control" value="{{ car.price }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="year_of_manufacture" class="form-label">Год выпуска:</label>
+            <input type="number" name="year_of_manufacture" id="year_of_manufacture" class="form-control" value="{{ car.year_of_manufacture }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="location" class="form-label">Город:</label>
+            <input type="text" name="location" id="location" class="form-control" value="{{ car.location }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="registration" class="form-label">Регистрация/Учет:</label>
+            <input type="text" name="registration" id="registration" class="form-control" value="{{ car.registration }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="image" class="form-label">Изображение:</label>
+            <input type="file" name="image" id="image" class="form-control">
+            {% if car.image %}
+                <small>Текущее изображение: <a href="{{ car.image.url }}" target="_blank">Просмотр</a></small>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Сохранить изменения</button>
+    </form>
+</div>
+
+</body>
+</html>

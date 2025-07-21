@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Car, Category
+from .forms import CarForm
 
 def index(request):
     cars = Car.objects.all()
@@ -11,9 +12,6 @@ def detail(request, car_id):
 
 def about(request):
     return render(request, 'app/about.html')
-
-from django.shortcuts import render, redirect
-from .models import Car, Category
 
 def car_announcement(request):
     if request.method == "POST":
@@ -39,4 +37,43 @@ def car_announcement(request):
     categories = Category.objects.all()
     return render(request, 'app/car_announcement.html', {'categories': categories})
 
+def car_update(request, car_id):
+    car = Car.objects.get(id=car_id)
+    if request.method == "POST":
+        car.title = request.POST['title']
+        car.model = request.POST['model']
+        car.category_id = request.POST['category']
+        car.engine_volume = request.POST['engine_volume']
+        car.color = request.POST['color']
+        car.transmission = request.POST['transmission']
+        car.price = request.POST['price']
+        car.year_of_manufacture = request.POST['year_of_manufacture']
+        car.location = request.POST['location']
+        car.registration = request.POST['registration']
+        car.image = request.FILES['image']
+
+        car.save()
+        return redirect('car_detail', car_id=car.id)
+    categories = Category.objects.all()
+    return render(request, 'app/car_data_update.html', {'car': car, 'categories': categories})
+
+
+def delete_car(request, car_id):
+    car = Car.objects.get(id=car_id)
+    if request.method == 'POST':
+        car.delete()
+        return redirect('index')
+    return render(request, 'app/car_delete.html', {'car': car})
+
+
+def add_car(request):
+    if request.method == 'POST':
+        form = CarForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = CarForm()
+
+    return render(request, 'app/car_form.html', {'form': form})
 

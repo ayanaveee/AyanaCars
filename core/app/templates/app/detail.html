@@ -8,98 +8,79 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         body {
-            background-color: #f5f7fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
+            background-color: #f9fafc;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 22px;
         }
         .container {
-            max-width: 900px;
-            margin-top: 40px;
-            margin-bottom: 60px;
+            max-width: 1000px;
+            padding: 40px 15px;
         }
         .card {
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
-        .car-img {
+        .car-image {
             width: 100%;
-            max-height: 350px;
+            height: 100%;
             object-fit: cover;
-            border-bottom: 1px solid #e0e0e0;
-            transition: transform 0.3s ease;
-            cursor: zoom-in;
+            border-radius: 12px 0 0 12px;
         }
-        .car-img:hover {
-            transform: scale(1.05);
-        }
-        .card-body {
-            padding: 2rem;
-        }
-        h3.card-title {
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #0d6efd;
-        }
-        .details-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 1.5rem 0;
-        }
-        .details-list li {
-            margin-bottom: 0.6rem;
-            font-size: 1.1rem;
-        }
-        .details-list li strong {
-            width: 160px;
-            display: inline-block;
+        .info-label {
+            font-weight: 600;
             color: #555;
+            min-width: 150px;
         }
-        .badge-available {
-            font-size: 1rem;
-            padding: 0.5em 1.2em;
-            border-radius: 30px;
-            font-weight: 600;
+        .info-value {
+            color: #222;
         }
-        .btn-back {
+        .back-link {
+            margin-bottom: 20px;
             display: inline-block;
-            margin-bottom: 30px;
-            background-color: #0d6efd;
-            color: white;
-            padding: 0.6rem 1.4rem;
-            border-radius: 50px;
             text-decoration: none;
+            color: #0d6efd;
             font-weight: 600;
-            transition: background-color 0.3s ease;
         }
-        .btn-back:hover {
-            background-color: #084ec1;
-            color: white;
-            text-decoration: none;
+        .btn-group {
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .car-image {
+                border-radius: 12px 12px 0 0;
+                height: 300px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <a href="{% url 'index' %}" class="btn-back">&larr; Назад</a>
+    <a href="{% url 'index' %}" class="back-link">&larr; Назад к списку</a>
 
-    <div class="card shadow">
-        <img src="{{ car.image.url }}" alt="{{ car.title }}" class="car-img" />
-        <div class="card-body">
-            <h3 class="card-title">{{ car.title }}</h3>
-            <ul class="details-list">
-                <li><strong>Модель:</strong> {{ car.model }}</li>
-                <li><strong>Год выпуска:</strong> {{ car.year_of_manufacture }}</li>
-                <li><strong>Цена:</strong> {{ car.price }} $</li>
-                <li><strong>Объем двигателя:</strong> {{ car.engine_volume }} л</li>
-                <li><strong>Цвет:</strong> {{ car.color }}</li>
-                <li><strong>Коробка передач:</strong> {{ car.transmission }}</li>
-                <li><strong>Местоположение:</strong> {{ car.location }}</li>
-                <li><strong>Учёт:</strong> {{ car.registration }}</li>
-            </ul>
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <img src="{{ car.image.url }}" alt="{{ car.title }}" class="car-image" />
+            </div>
+            <div class="col-md-6 d-flex flex-column p-4">
+                <h3 class="mb-3" style="font-size: 30px; text-align: center">{{ car.title }}</h3>
+                <div class="mb-2"><span class="info-label">Модель:</span> <span class="info-value">{{ car.model }}</span></div>
+                <div class="mb-2"><span class="info-label">Год выпуска:</span> <span class="info-value">{{ car.year_of_manufacture }}</span></div>
+                <div class="mb-2"><span class="info-label">Цена:</span> <span class="info-value">{{ car.price }} $</span></div>
+                <div class="mb-2"><span class="info-label">Объём двигателя:</span> <span class="info-value">{{ car.engine_volume }} л</span></div>
+                <div class="mb-2"><span class="info-label">Цвет:</span> <span class="info-value">{{ car.color }}</span></div>
+                <div class="mb-2"><span class="info-label">Коробка передач:</span> <span class="info-value">{{ car.transmission }}</span></div>
+                <div class="mb-2"><span class="info-label">Местоположение:</span> <span class="info-value">{{ car.location }}</span></div>
+                <div class="mb-2"><span class="info-label">Учёт:</span> <span class="info-value">{{ car.registration }}</span></div>
+
+                <div class="btn-group mt-auto">
+                    <a href="{% url 'car_update' car.id %}" class="btn btn-outline-primary">Изменить</a>
+                    <a href="{% url 'delete_car' car.id %}" class="btn btn-outline-danger">Удалить</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 </body>
 </html>
-
