@@ -1,6 +1,9 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from .models import Car, Category
 from .forms import CarForm
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 
 def index(request):
     cars = Car.objects.all()
@@ -66,14 +69,58 @@ def delete_car(request, car_id):
     return render(request, 'app/car_delete.html', {'car': car})
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import CarForm
+
 def add_car(request):
     if request.method == 'POST':
         form = CarForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            car = form.save(commit=False)
+            car.user = request.user
+            car.save()
             return redirect('index')
     else:
         form = CarForm()
-
     return render(request, 'app/car_form.html', {'form': form})
 
+
+def user_register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Вы успешно создали аккаунт!')
+            return redirect('index')
+
+        for field, errors in form.errors.items():
+
+            for error in errors:
+                messages.error(request, f'{error}')
+
+    form = UserCreationForm()
+
+    return render(request=request, template_name='app/user_register.html', context={"form": form})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(request=request, username=username, password=password)
+        if user:
+            login(request, user)
+            messages.success(request, 'Вы успешно вошли в систему!')
+            return redirect('index')
+
+        messages.error(request, 'Неправильный логин или пароль')
+
+    return render(request, 'app/user_login.html')
+
+
+def user_logout(request):
+    logout(request)
+    messages.success(request, 'Вы успешно вышли из системы')
+    return redirect('index')

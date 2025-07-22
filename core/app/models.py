@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
@@ -7,6 +8,7 @@ class Category(models.Model):
         return self.title
 
 class Car(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
     engine_volume = models.CharField(max_length=100)
